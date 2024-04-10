@@ -15,7 +15,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ImageView ivAvatar = findViewById(R.id.ivAvatar);
-        String url = "https://content1.rozetka.com.ua/goods/images/big/343033787.jpg";
+//        String url = "https://content1.rozetka.com.ua/goods/images/big/343033787.jpg";
+        String url = "http://10.0.2.2:5101/images/1.jpg";
         Glide.with(this)
                 .load(url)
                 .apply(new RequestOptions().override(400))
