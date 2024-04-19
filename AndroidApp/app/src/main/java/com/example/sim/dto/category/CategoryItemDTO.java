@@ -4,6 +4,7 @@ public class CategoryItemDTO {
     private int id;
     private String name;
     private String description;
+    private String image;
 
     public int getId() {
         return id;
@@ -27,5 +28,13 @@ public class CategoryItemDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getImage() {
+        return image;
     }
 }
