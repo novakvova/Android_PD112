@@ -102,6 +102,19 @@ namespace ShopApp.Controllers
             return Ok(category);
         }
 
+
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
+        {
+            var category = _appContext.Categories.SingleOrDefault(x => x.Id == id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(category);
+        }
+
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
