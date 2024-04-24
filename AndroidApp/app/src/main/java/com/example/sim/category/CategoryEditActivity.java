@@ -20,12 +20,14 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.sim.BaseActivity;
 import com.example.sim.MainActivity;
 import com.example.sim.R;
+import com.example.sim.contants.Urls;
 import com.example.sim.dto.category.CategoryItemDTO;
 import com.example.sim.services.ApplicationNetwork;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.MediaType;
@@ -72,20 +74,46 @@ public class CategoryEditActivity extends BaseActivity {
         Bundle b = getIntent().getExtras();
         if(b!=null)
             id=b.getInt("id");
+        initData();
+    }
 
-//        Toast.makeText(this, id, Toast.LENGTH_LONG).show();
+    private void initData() {
 
         isStoragePermissionGranted();
 
         tlCategoryNameEdit = findViewById(R.id.tlCategoryNameEdit);
         tlCategoryDescriptionEdit = findViewById(R.id.tlCategoryDescriptionEdit);
         ivSelectImageEdit = findViewById(R.id.ivSelectImageEdit);
-        String url = "https://cdn.pixabay.com/photo/2016/01/03/00/43/upload-1118929_1280.png";
-        Glide
-                .with(this)
-                .load(url)
-                .apply(new RequestOptions().override(300))
-                .into(ivSelectImageEdit);
+
+        ApplicationNetwork.getInstance()
+                .getCategoriesApi()
+                .getById(id)
+                .enqueue(new Callback<CategoryItemDTO>() {
+                    @Override
+                    public void onResponse(Call<CategoryItemDTO> call, Response<CategoryItemDTO> response) {
+                        if(response.isSuccessful()) {
+                            CategoryItemDTO item = response.body();
+                            tlCategoryNameEdit.getEditText().setText(item.getName());
+                            tlCategoryDescriptionEdit.getEditText().setText(item.getDescription());
+                            String image = item.getImage();
+
+                            String url = "https://img.freepik.com/free-vector/man-saying-no-concept-illustration_114360-19591.jpg";
+                            if(image!=null) {
+                                url = Urls.BASE+"/images/"+image;
+                            }
+                            Glide
+                                    .with(CategoryEditActivity.this)
+                                    .load(url)
+                                    .apply(new RequestOptions().override(300))
+                                    .into(ivSelectImageEdit);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CategoryItemDTO> call, Throwable throwable) {
+
+                    }
+                });
 
     }
 
@@ -133,6 +161,7 @@ public class CategoryEditActivity extends BaseActivity {
             String description = tlCategoryDescriptionEdit.getEditText().getText().toString().trim();
 
             Map<String, RequestBody> params = new HashMap<>();
+            params.put("id", RequestBody.create(MediaType.parse("text/plain"), String.valueOf(id)));
             params.put("name", RequestBody.create(MediaType.parse("text/plain"), name));
             params.put("description", RequestBody.create(MediaType.parse("text/plain"), description));
 
@@ -145,7 +174,7 @@ public class CategoryEditActivity extends BaseActivity {
 
             ApplicationNetwork.getInstance()
                     .getCategoriesApi()
-                    .create(params, imagePart)
+                    .edit(params, imagePart)
                     .enqueue(new Callback<CategoryItemDTO>() {
                         @Override
                         public void onResponse(Call<CategoryItemDTO> call, Response<CategoryItemDTO> response) {

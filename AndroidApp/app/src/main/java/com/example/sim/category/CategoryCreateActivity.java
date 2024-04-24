@@ -19,7 +19,6 @@ import com.example.sim.BaseActivity;
 import com.example.sim.MainActivity;
 import android.Manifest;
 import com.example.sim.R;
-import com.example.sim.dto.category.CategoryCreateDTO;
 import com.example.sim.dto.category.CategoryItemDTO;
 import com.example.sim.services.ApplicationNetwork;
 import com.google.android.material.textfield.TextInputLayout;
