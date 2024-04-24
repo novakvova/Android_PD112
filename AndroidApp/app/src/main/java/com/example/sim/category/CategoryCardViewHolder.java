@@ -15,12 +15,14 @@ public class CategoryCardViewHolder extends RecyclerView.ViewHolder {
     private TextView categoryDescription;
     private ImageView ivCategoryImage;
     public Button btnEdit;
+    public Button btnDelete;
     public CategoryCardViewHolder(@NonNull View itemView) {
         super(itemView);
         categoryName = itemView.findViewById(R.id.categoryName);
         categoryDescription = itemView.findViewById(R.id.categoryDescription);
         ivCategoryImage = itemView.findViewById(R.id.ivCategoryImage);
         btnEdit = itemView.findViewById(R.id.btnEdit);
+        btnDelete = itemView.findViewById(R.id.btnDelete);
     }
 
     public TextView getCategoryName() {
@@ -37,5 +39,8 @@ public class CategoryCardViewHolder extends RecyclerView.ViewHolder {
 
     public Button getBtnEdit() {
         return btnEdit;
+    }
+    public Button getBtnDelete() {
+        return btnDelete;
     }
 }

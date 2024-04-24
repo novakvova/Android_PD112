@@ -3,11 +3,15 @@ package com.example.sim;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.sim.category.CategoriesAdapter;
 import com.example.sim.category.CategoryEditActivity;
+import com.example.sim.contants.Urls;
 import com.example.sim.dto.category.CategoryItemDTO;
 import com.example.sim.services.ApplicationNetwork;
 
@@ -17,6 +21,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import androidx.appcompat.app.AlertDialog;
+
 public class MainActivity extends BaseActivity {
     RecyclerView rcCategories;
 
@@ -25,7 +31,9 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         rcCategories = findViewById(R.id.rcCategories);
-        onLoadApp();
+        rcCategories.setHasFixedSize(true);
+        rcCategories.setLayoutManager(new GridLayoutManager(this, 1, RecyclerView.VERTICAL, false));
+        onLoadData();
     }
 
     private void onClickEditCategory(CategoryItemDTO category) {
@@ -39,9 +47,38 @@ public class MainActivity extends BaseActivity {
         finish();
     }
 
-    private void onLoadApp() {
-        rcCategories.setHasFixedSize(true);
-        rcCategories.setLayoutManager(new GridLayoutManager(this, 1, RecyclerView.VERTICAL, false));
+    private void onClickDeleteCategory(CategoryItemDTO category) {
+        //Toast.makeText(this, category.getName(), Toast.LENGTH_LONG).show();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setMessage("Видалити "+ category.getName()+"?")
+                .setPositiveButton("Так", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                            ApplicationNetwork.getInstance()
+                                    .getCategoriesApi()
+                                    .delete(category.getId())
+                                    .enqueue(new Callback<Void>() {
+                                        @Override
+                                        public void onResponse(Call<Void> call, Response<Void> response) {
+                                            if(response.isSuccessful()) {
+                                                onLoadData();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<Void> call, Throwable throwable) {
+
+                                        }
+                                    });
+
+                    }
+                })
+                .setNegativeButton("Ні", null) // No action when user clicks No
+                .show();
+    }
+
+    private void onLoadData() {
 
         ApplicationNetwork
                 .getInstance()
@@ -52,7 +89,8 @@ public class MainActivity extends BaseActivity {
                     public void onResponse(Call<List<CategoryItemDTO>> call, Response<List<CategoryItemDTO>> response) {
                         List<CategoryItemDTO> items = response.body();
                         CategoriesAdapter ca = new CategoriesAdapter(items,
-                                MainActivity.this::onClickEditCategory);
+                                MainActivity.this::onClickEditCategory,
+                                MainActivity.this::onClickDeleteCategory);
                         rcCategories.setAdapter(ca);
                         //Log.d("--list categories--", String.valueOf(items.size()));
                     }
