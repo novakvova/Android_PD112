@@ -79,7 +79,6 @@ public class MainActivity extends BaseActivity {
     }
 
     private void onLoadData() {
-
         ApplicationNetwork
                 .getInstance()
                 .getCategoriesApi()
