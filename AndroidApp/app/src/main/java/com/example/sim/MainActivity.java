@@ -14,6 +14,7 @@ import com.example.sim.category.CategoryEditActivity;
 import com.example.sim.contants.Urls;
 import com.example.sim.dto.category.CategoryItemDTO;
 import com.example.sim.services.ApplicationNetwork;
+import com.example.sim.utils.CommonUtils;
 
 import java.util.List;
 
@@ -25,7 +26,6 @@ import androidx.appcompat.app.AlertDialog;
 
 public class MainActivity extends BaseActivity {
     RecyclerView rcCategories;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +79,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void onLoadData() {
+        CommonUtils.showLoading();
         ApplicationNetwork
                 .getInstance()
                 .getCategoriesApi()
@@ -86,6 +87,7 @@ public class MainActivity extends BaseActivity {
                 .enqueue(new Callback<List<CategoryItemDTO>>() {
                     @Override
                     public void onResponse(Call<List<CategoryItemDTO>> call, Response<List<CategoryItemDTO>> response) {
+                        CommonUtils.hideLoading();
                         List<CategoryItemDTO> items = response.body();
                         CategoriesAdapter ca = new CategoriesAdapter(items,
                                 MainActivity.this::onClickEditCategory,
@@ -95,6 +97,7 @@ public class MainActivity extends BaseActivity {
                     }
                     @Override
                     public void onFailure(Call<List<CategoryItemDTO>> call, Throwable throwable) {
+                        CommonUtils.hideLoading();
 
                     }
                 });
