@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using ShopApp.Data.Entities.Identity;
 
 namespace ShopApp.Data.Entities
 {
@@ -17,6 +18,11 @@ namespace ShopApp.Data.Entities
 
         [StringLength(255)]
         public string? Image { get; set; }
+
+        [ForeignKey("User")]
+        public long? UserId { get; set; }
+
+        public virtual UserEntity? User { get; set; }
 
     }
 }

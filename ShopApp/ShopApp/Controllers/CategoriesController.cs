@@ -5,14 +5,17 @@ using ShopApp.Models.Categories;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ShopApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CategoriesController : ControllerBase
     {
         private readonly MyAppContext _appContext;
+
 
         public CategoriesController(MyAppContext appContext)
         {

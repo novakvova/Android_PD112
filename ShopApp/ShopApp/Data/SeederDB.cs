@@ -36,6 +36,8 @@ namespace ShopApp.Data
                     }
                 }
 
+                var userId = 0L;
+
                 if (!context.Users.Any())
                 {
                     UserEntity user = new()
@@ -49,6 +51,7 @@ namespace ShopApp.Data
                         .Result;
                     if (result.Succeeded)
                     {
+                        userId = user.Id;
                         result = userManager
                             .AddToRoleAsync(user, Roles.Admin)
                             .Result;
@@ -59,18 +62,22 @@ namespace ShopApp.Data
 
                 if (!context.Categories.Any())
                 {
-                    var kovbasy = new CategoryEntity
+                    var flowers = new CategoryEntity
                     {
                         Name = "Квіти",
-                        Description = "Гарні і свіжі"
+                        Description = "Гарні і свіжі",
+                        Image = "flowers.webp",
+                        UserId = userId,
                     };
-                    var vsutiy = new CategoryEntity
+                    var foods = new CategoryEntity
                     {
                         Name = "Фрукти",
-                        Description = "Гарна і класна погода"
+                        Description = "Закуска не погана",
+                        Image = "foods.jpg",
+                        UserId = userId,
                     };
-                    context.Categories.Add(kovbasy);
-                    context.Categories.Add(vsutiy);
+                    context.Categories.Add(flowers);
+                    context.Categories.Add(foods);
                     context.SaveChanges();
                 }
             }
