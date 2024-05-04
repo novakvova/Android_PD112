@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using ShopApp.Data.Entities;
+using ShopApp.Data.Entities.Identity;
+using ShopApp.Models.Account;
 using ShopApp.Models.Categories;
 
 namespace ShopApp.Mapper
@@ -9,6 +11,8 @@ namespace ShopApp.Mapper
         public AppMapProfile()
         {
             CreateMap<CategoryEntity, CategoryItemViewModel>();
+            CreateMap<RegisterViewModel, UserEntity>()
+                .ForMember(x=>x.UserName, opt=>opt.MapFrom(x=>x.Email));
         }
     }
 }
